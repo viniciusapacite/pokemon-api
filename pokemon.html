@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>api teste</title>
+</head>
+<body>
+    <style>
+        html,body {
+            min-height: 100vh;
+        }
+
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .pokemon-boxe {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            flex-wrap: wrap;
+            height: 100%;
+            background-color: #f3f3f3;
+        }
+
+        input{
+            padding: 10px;
+            width: 50%;
+            margin: 40px auto;
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+            outline: none;
+            text-align: center;
+           
+        }
+
+        .pokemon-box {
+            width: 33%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            gap: 20px;
+            margin: 50px 0;
+            
+        }
+    </style>
+
+<input type="number"  name="quantidade" id="quantidade" placeholder="digite a quantidade de pokemons
+">
+    <div class="pokemon-boxe">
+    </div>
+    <script>
+        var quantidade = document.getElementById('quantidade');
+        quantidade.addEventListener('keyup', ()=>{
+            pegaPokemons(quantidade.value)
+        })
+
+        pegaPokemons(2)
+
+       function pegaPokemons (quantidade){
+        fetch('https://pokeapi.co/api/v2/pokemon?limit='+quantidade)
+        .then(response => response.json())
+        .then(allpokemon =>  {
+
+            var pokemon = []
+
+                allpokemon.results.map((val) =>{
+                
+                    fetch(val.url)
+                    .then(response => response.json())
+                    .then(pokemonSingle =>  {
+                        pokemon.push({nome:val.name, imagem: pokemonSingle.sprites.front_default});
+                        
+                        if(pokemon.length == 10){
+                        
+                        // console.log(pokemon)
+                    }   
+
+                    
+                    var pokemonBoxe = document.querySelector('.pokemon-boxe');
+            
+                    pokemon.map((val) =>{
+                        pokemonBoxe.innerHTML += `
+                            <div class='pokemon-box ' >
+                                <img src="`+val.imagem+`">
+                                <p>`+val.nome+`</p>    
+                            </div>
+                        
+                        `
+                    })
+                                       
+                    })
+
+
+                })
+
+             
+
+        })
+        
+       }
+    </script>
+</body>
+</html>
